@@ -14,7 +14,7 @@ def handle_constrains(x):
 
 
 def gen_init_pop(M):
-    X = np.random.uniform(low=-0.5, high=1.0, size=(M))
+    X = np.random.uniform(low=0.0, high=1.0, size=(M))
     return X
 
 
@@ -43,15 +43,16 @@ def crossover(parent1, parent2, cross_prob):
     os1 = parent1.copy()
     os2 = parent2.copy()
     if np.random.rand() < cross_prob:
-        cross_pt = np.random.randint(1, len(parent1))
-        os1 = np.concatenate((os1[:cross_pt], os2[cross_pt:]), axis=0)
-        os2 = np.concatenate((os2[:cross_pt], os1[cross_pt:]), axis=0)
+        cross_pt = np.random.randint(1, len(str(parent1)))
+
+        os1 = float(str(os1)[:cross_pt]+ str(os2)[cross_pt:])
+        os2 = float(str(os2)[:cross_pt]+ str(os1)[cross_pt:])
     return [os1, os2]
 
 
 def mutation(offspring, mut_prob):
     if np.random.rand() < mut_prob:
-        offspring = np.random.uniform(low=-0.5, high=1.0, size=(1,))
+        offspring = np.random.uniform(low=0.0, high=1.0, size=(1,))
     return offspring
 
 
@@ -116,4 +117,4 @@ def genetic_algo(M, N, R, max_gen=None, cross_prob=None, mut_prob=None):
     df.to_csv(f'data_{M}_{N}_{R}_{max_gen}_{cross_prob}_{mut_prob}.csv')
 
 
-genetic_algo(300, 4, 100, 100, 0, 0.5)
+# genetic_algo(300, 4, 100, 100, 0, 0.5)
