@@ -31,7 +31,7 @@ def gen_init_pop(M, N):
 def objective(x):
     return x * math.sin(10 * math.pi * x) + 1
 
-def plot_obj():
+def plot_obj(best_indiv, best):
     x= np.linspace(-0.5,1,endpoint=True, dtype=float)
     vect_obj = np.vectorize(objective)
     y=vect_obj(x)
@@ -39,6 +39,8 @@ def plot_obj():
     plt.xlabel('x in [-0.5,1]')
     plt.ylabel('f(x)')
     plt.plot(x,y)
+    plt.scatter(best_indiv, best,c='r')
+
     plt.savefig('objective_function.png')
 
 def get_fitness(X):
@@ -119,6 +121,7 @@ def genetic_algo(M, N, R, max_gen=None, cross_prob=None, mut_prob=None):
         # if terminal_criteria():
         #     break
 
+    plot_obj(best_indiv,best)
     # dictionary of lists
     dict = {'best': best, 'worst': worst, 'avg': avg, 'best_ind': best_indiv}
     df = pd.DataFrame(dict)
@@ -139,4 +142,3 @@ def genetic_algo(M, N, R, max_gen=None, cross_prob=None, mut_prob=None):
 
 
 genetic_algo(300, 4, 100, 100, 0.5, 0.5)
-plot_obj()
