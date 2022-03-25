@@ -41,8 +41,9 @@ def get_fitness(X):
 
 def selection(fitness, pop):
     # fitness = np.array([(x - min(fitness)) / (max(fitness) - min(fitness)) for x in fitness])
+    fitness = [abs(f) for f in fitness]
     pop_fitness = np.sum(fitness)
-    individual_probabilities = np.array([fitness[i] / pop_fitness for i in range(len(fitness))])
+    individual_probabilities = np.array([abs(fitness[i] / pop_fitness) for i in range(len(fitness))])
     a = np.arange(len(pop))
     try:
         s = np.random.choice(a, p=individual_probabilities)
@@ -94,16 +95,11 @@ def terminal_criteria():
 
 
 def sharing(distance, sigma, alpha):
-    res = 0
-    if distance < sigma:
-        res += 1 - (distance / sigma) ** alpha
-    return res
+    return 1 - (distance / sigma) ** alpha if distance < sigma else 0
 
 
 def shared_fitness(pop, sigma, alpha):
     f = get_fitness(pop)
-    # pop = pop.reshape(-1, 1)
-    # nz = np.zeros_like(pop)
     Fs = []
     for i, fi in enumerate(f):
         # a= pop[i]
@@ -118,7 +114,6 @@ def shared_fitness(pop, sigma, alpha):
 def cluster_fitness(pop, n_clusters, dmax, alpha):
     f = get_fitness(pop)
     f = f.reshape(-1, 1)
-    # pop = pop.reshape(-1,1)
     kmeans = KMeans(n_clusters=n_clusters, random_state=0).fit(f)
     unique_elements, counts_elements = np.unique(kmeans.labels_, return_counts=True)
     ncs = {k: v for k, v in zip(unique_elements, counts_elements)}
@@ -136,7 +131,7 @@ def cluster_fitness(pop, n_clusters, dmax, alpha):
 
 def genetic_algo(M, R, max_gen=None, cross_prob=None, mut_prob=None, niching="without_niching"):
     pop = gen_init_pop(M)
-    k = 8
+    k = 5
     for generation in range(max_gen):
         # get fitness
         f = get_fitness(pop)
@@ -165,4 +160,4 @@ def genetic_algo(M, R, max_gen=None, cross_prob=None, mut_prob=None, niching="wi
 
 if __name__ == "__main__":
     for n in ["sharing", "clustering", "without_niching"]:
-        genetic_algo(50, 20, max_gen=400, cross_prob=0.5, mut_prob=0.0, niching=n)
+        genetic_algo(50, 20, max_gen=200, cross_prob=0.8, mut_prob=0.0, niching=n)
