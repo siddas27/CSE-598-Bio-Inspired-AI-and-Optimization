@@ -13,7 +13,7 @@ def handle_constrains(x):
 
 
 def gen_init_pop(M):
-    X = np.random.uniform(low=-0.5, high=1.0, size=(M))
+    X = np.random.uniform(low=0.0, high=1.0, size=(M))
     return X
 
 
@@ -40,13 +40,18 @@ def get_fitness(X):
 
 
 def selection(fitness, pop):
-    fitness = np.array([(x - min(fitness)) / (max(fitness) - min(fitness)) for x in fitness])
+    # fitness = np.array([(x - min(fitness)) / (max(fitness) - min(fitness)) for x in fitness])
     pop_fitness = np.sum(fitness)
     individual_probabilities = np.array([fitness[i] / pop_fitness for i in range(len(fitness))])
     a = np.arange(len(pop))
-
-    s = np.random.choice(a, p=individual_probabilities)
-    return pop[s]
+    try:
+        s = np.random.choice(a, p=individual_probabilities)
+        return pop[s]
+    except Exception as e:
+        print(e)
+        print(pop_fitness)
+        print(fitness)
+        return pop[0]
 
 
 def crossover(parent1, parent2, cross_prob):
@@ -160,4 +165,4 @@ def genetic_algo(M, R, max_gen=None, cross_prob=None, mut_prob=None, niching="wi
 
 if __name__ == "__main__":
     for n in ["sharing", "clustering", "without_niching"]:
-        genetic_algo(50, 20, max_gen=400, cross_prob=0.0, mut_prob=0.0, niching=n)
+        genetic_algo(50, 20, max_gen=400, cross_prob=0.5, mut_prob=0.0, niching=n)
