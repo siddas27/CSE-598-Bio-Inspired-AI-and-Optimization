@@ -26,6 +26,7 @@ def plot_obj(nx, ny, filename):
     x = np.linspace(-0.5, 1, 1000, endpoint=True, dtype=float)
     vect_obj = np.vectorize(objective)
     y = vect_obj(x)
+    plt.title(filename)
     plt.xlabel('x in [-0.5,1]')
     plt.ylabel('f(x)')
     plt.plot(x, y)
@@ -160,4 +161,4 @@ def genetic_algo(M, R, max_gen=None, cross_prob=None, mut_prob=None, niching="wi
 
 if __name__ == "__main__":
     for n in ["sharing", "clustering", "without_niching"]:
-        genetic_algo(50, 20, max_gen=200, cross_prob=0.8, mut_prob=0.0, niching=n)
+        genetic_algo(50, 20, max_gen=400, cross_prob=0.8, mut_prob=0.3, niching=n)
